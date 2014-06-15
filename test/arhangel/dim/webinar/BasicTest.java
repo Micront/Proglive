@@ -16,6 +16,7 @@ public class BasicTest extends Assert {
     @Test
     public void testBinaryView() {
         logger.info("\n 1: {}\n-1: {}", Basic.toBinaryString(1), Basic.toBinaryString(-1));
+        logger.info("\n 127: {}\n-128: {}", Basic.toBinaryString(127), Basic.toBinaryString(-128));
     }
 
     @Test
