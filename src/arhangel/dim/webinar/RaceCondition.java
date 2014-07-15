@@ -3,6 +3,8 @@ package arhangel.dim.webinar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
 /**
  *
  */
@@ -27,13 +29,15 @@ public class RaceCondition {
         @Override
         public void run() {
             for (int i = 0; i < 10000; i++) {
-                counter++;
-                //inc();
+                //counter++;
+                inc();
             }
         }
     }
 
-    static synchronized void inc() {
-        counter++;
+    static void inc() {
+        synchronized (RaceCondition.class) {
+            counter++;
+        }
     }
 }

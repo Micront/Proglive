@@ -42,6 +42,9 @@ public class BasicTest extends Assert {
         String s2 = "test";
         String s3 = "abcd";
 
+        // don't do it!
+        //s1 == s2
+
         assertTrue(s1.equals(s2));
         assertFalse(s1.equals(s3));
     }
@@ -51,9 +54,11 @@ public class BasicTest extends Assert {
         float a = 0.3f;
         float b = 0.4f;
         logger.info("0.3 + 0.4 = {}", (double) (a + b));
+
         //assertTrue(a + b == 0.7f);
 
         assertTrue(Basic.equalsFloat(a + b, 0.7f, 1e-6));
+
     }
 
 

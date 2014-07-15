@@ -32,7 +32,7 @@ public class Composition {
         Wheel wheel = new Wheel();
         wheel.radius = 19;
         Engine engine = new Engine();
-        engine.power = 200;
+        engine.power = 250;
 
         Car myCar = new Car(engine, wheel);
         myCar.move();

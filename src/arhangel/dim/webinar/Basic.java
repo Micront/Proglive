@@ -18,6 +18,8 @@ public class Basic {
         return builder.toString();
     }
 
+
+
     // comparison with epsilon
     public static boolean equalsFloat(float a, float b, double epsilon) {
         return Math.abs(a - b) <= epsilon;
