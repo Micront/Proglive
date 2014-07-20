@@ -1,0 +1,1 @@
+pdflatex.exe %1 --output-directory=output --aux-directory=aux_out
