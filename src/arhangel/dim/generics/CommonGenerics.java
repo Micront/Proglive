@@ -2,10 +2,7 @@ package arhangel.dim.generics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  *
@@ -83,6 +80,16 @@ public class CommonGenerics {
             String s = (String) o; // runtime error
 
         }
+
+    }
+
+    public static <E> void arrays(E elements) {
+        //E[] arr = new E[10];
+        E[] arr = (E[]) new Object[10];
+
+        Object[] objects = new Object[10];
+
+        E e = (E) objects[0];
 
     }
 
