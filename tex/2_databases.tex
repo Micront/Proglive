@@ -1,0 +1,235 @@
+\documentclass[12pt]{article}
+\usepackage[cp1251]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage{pscyr}
+\usepackage{amssymb,latexsym,amsmath,amscd}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=2
+}
+\begin{document}
+\section*{Базы данных}
+
+План урока
+\begin{itemize}
+	\item виды баз данных
+	\item язык запросов SQL
+	\item оператор select
+	\item CRUD 
+	\item JDBC - работа с базой из Java
+	\item Создание и удаление таблиц
+\end{itemize}
+
+\subsection*{Виды баз данных}
+База данных - совокупность данных, организованных в соответствие со структурой, описывающей характеристики этих данных и взаимоотношения между ними.
+
+\begin{itemize}
+	\item иерархические
+	\item реляционные
+	\item объектно-ориентированные
+\end{itemize}
+
+Реляционные базы данных хранят всю информацию в двумерных таблицах, связанных между собой специальными отношениями. Использую эти отношения, можно извлекать информацию из разных таблиц с помощью одного запроса.
+
+В курсе Java 2 нас будут интересовать именно реляционные базы данных. Чтобы начать работу с базой данных, нужно установить у себя систему управления базой данных (СУБД). Примеры таких систем -  MySQL, Oracle, MS SQL. Мы будем использовать легковесную СУБД SQLite (http://www.sqlite.org/download.html скачивать Precompiled Binaries for Windows)
+
+Она не требует установки и хранит все данные в одном файле. Имеет интерфейс командной строки (http://www.sqlite.org/cli.html)
+Несколько примеров использования (Приложение называется sqlite3.exe)
+
+\begin{lstlisting}
+sqlite3 my_database.db  // создаст базу данных с именем my_database.db
+
+C:\javacourse>sqlite3 mydb.db
+SQLite version 3.8.4.3 2014-04-03 16:53:12
+Enter ".help" for usage hints.
+sqlite> create table users (
+   ...> name text,
+   ...> password text);
+sqlite> .tables
+users
+sqlite> insert into users (name, password) values ("Bob", "123");
+sqlite> select * from users;
+Bob|123
+sqlite>
+\end{lstlisting}
+
+Полный список команд можно прочитать, набрав .help внутри консоли SQLite.
+
+\subsection*{Особенности SQLite}
+\begin{itemize}
+	\item хранит всю базу в одном файле
+	\item не требует установки
+	\item не требует авторизации (мы не создаем пользователя и пароль)
+	\item не поддерживает тип данных Дата
+\end{itemize}
+
+Поддерживаемые типы данных:
+
+\begin{itemize}
+	\item NULL - NULL значение
+	\item INTEGER - целое знаковое
+	\item REAL - с плавающей точкой
+	\item TEXT - текст, строка (UTF-8)
+	\item BLOB - бинарные данные
+\end{itemize}
+
+\subsection*{Язык запросов SQL}
+Аббревиатура CRUD содержит в себе все операции, которые можно производить над данными в базе.
+CRUD = Create/Read/Update/Delete
+
+Эти операции выполняются с помощью специального языка - SQL. Все команды должны заканчиваться символом точка с запятой (;). Все команды языка регистронезависимы и могут иметь между собой любое количество пробелов и переносов строк.
+
+\textbf{CREATE}
+
+CREATE TABLE [имя таблицы] (
+
+	[имя колонки] [тип данных],
+	
+	[имя колонки] [тип данных],
+	
+	...
+);
+
+\begin{lstlisting}
+CREATE TABLE IF NOT EXISTS ACCOUNTS
+(
+    ID          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    DESCR       TEXT                              NOT NULL,
+    USER_NAME   TEXT                              NOT NULL
+);
+\end{lstlisting}
+
+Здесь создается таблица Account с полями ID, DESCR, USERNAME.
+
+NOT NULL - означает, что поле всегда должно быть проинициализировано. СУБД следит за этим и в случае, если поле равно NULL выкидывает ошибку.
+
+PRIMARY KEY - означает, что поле имеет уникальное значение в этой таблице (В примере это поле ID - мы хотим, чтобы у каждой записи был уникальный номер). 
+
+AUTOINCREMENT - означает, что при каждом добавлении записи в таблицу, ей автоматически будет присвоен ID на единицу больше предыдущего.
+
+
+\textbf{READ}
+
+Операция чтения данных из таблицы называется SELECT.
+
+SELECT [список полей] FROM [имя таблицы]
+WHERE [условие];
+
+\begin{lstlisting}
+SELECT * FROM ACCOUNTS
+WHERE ID='3';
+// ID | DESRC | USER_NAME
+// 3     RUB      BOB
+
+SELECT USER_NAME FROM ACCOUNTS;
+// USER_NAME
+//   Bob
+//  Alisa 
+\end{lstlisting}
+
+Символ звездочка означает, что мы хотим получить все поля таблицы. Иначе мы можем через запятую перечислить необходимые поля. 
+
+Выражение WHERE необязательно, но помогает извлекать только интересные для нас данные.
+
+\textbf{UPDATE}
+
+Операция изменения уже присутствующих в таблице данных либо добавления новых.
+
+Добавление новых данных: 
+
+INSERT INTO [имя таблицы] ([список полей через запятую]) 
+
+VALUES ([список значение через запятую]);
+
+Изменение:
+
+UPDATE [имя таблицы]
+
+SET [имя колонки]=[новое значение], [имя колонки]=[новое значение],..
+
+WHERE [условие];
+
+\begin{lstlisting}
+INSERT INTO ACCOUNTS (DESCR, USER_NAME) VALUES ("RUB", "John"); 
+
+UPDATE ACCOUNTS SET USER_NAME="Ivan"
+WHERE USER_NAME="John";
+\end{lstlisting}
+
+
+\textbf{DELETE}
+
+Удаление данных из таблицы. 
+
+DELETE FROM [имя таблицы]
+WHERE [условие];
+
+\begin{lstlisting}
+DELETE FROM ACCOUNTS WHERE ID='0';
+\end{lstlisting}
+
+
+Подробно описание всех операций SQL можете найти на http://www.w3schools.com/sql
+
+\section*{JDBC}
+Каждая СУБД разрабатывается отдельной компанией. Чтобы можно было работать с базой, производитель пишет специальный драйвер базы - jdbc. 
+
+Java с помощью этого драйвера может обращаться к базе данных и взаимодействовать с ней. JDBC имеет следующие возможности:
+\begin{itemize}
+	\item устанавливать соединение с базой данных
+	\item посылать запросы и изменять данные (CRUD)
+	\item обрабатывать результаты запросов
+\end{itemize}
+
+\subsection*{Установка соединения}
+Драйвер jdbc обычно можно скачать с сайта производителя СУБД. Он распространяется в виде .jar - библиотеки. Эту библиотеку нужно подключить к вашему проекту (добавить в classpath). Прежде чем использовать драйвер, его нужно зарегистрировать - имя драйвера можно также найти на сайте разработчиков.
+
+Чтобы указать, как найти базу данных используется URL - специальная строка формата [protocol]:[subprotocol]:[name] \\
+protocol: jdbc \\
+subprotocol: sqlite \\
+name: mydatabase.db \\
+
+\begin{lstlisting}
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+Connection conn;
+
+void connect() {
+	Class.forName("org.sqlite.JDBC");
+	String databaseUrl = "jdbc:sqlite:mydatabase.db";
+	conn = DriverManager.getConnection(databaseUrl);
+}
+
+void close() {
+	conn.close();
+}
+\end{lstlisting}
+
+Объект Connection предоставляет доступ к базе данных. После окончания работы с базой, соединение нужно закрыть методом close().
+
+
+
+
+
+\end{document}
