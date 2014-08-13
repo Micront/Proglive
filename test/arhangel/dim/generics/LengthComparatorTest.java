@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class LengthComparatorTest extends Assert  {
+public class LengthComparatorTest extends Assert {
 
     @Test
     public void testSort() {

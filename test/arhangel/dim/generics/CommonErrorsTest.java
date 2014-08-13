@@ -55,7 +55,7 @@ public class CommonErrorsTest extends Assert {
 
         //juicer.makeAppleJuice(oranges);
 
-        Collection<Fruit> fruits= new ArrayList<>();
+        Collection<Fruit> fruits = new ArrayList<>();
         fruits.addAll(oranges);
         fruits.addAll(apples);
 

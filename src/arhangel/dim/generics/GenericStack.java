@@ -11,7 +11,6 @@ public class GenericStack<E> implements Stack<E> {
     private int size;
 
 
-
     public GenericStack(int capacity) {
         this.capacity = capacity;
         size = 0;

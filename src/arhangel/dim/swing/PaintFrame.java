@@ -45,34 +45,34 @@ public class PaintFrame extends JFrame {
 
     // class to handle mouse action from DrawPane
     private class DrawListener extends MouseAdapter {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                super.mouseDragged(e);
-                if (lastPoint == null) {
-                    lastPoint = e.getPoint();
-                    return;
-                }
-                lines.add(new Line2D.Float(lastPoint, e.getPoint()));
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            super.mouseDragged(e);
+            if (lastPoint == null) {
                 lastPoint = e.getPoint();
-
-                pane.repaint();
+                return;
             }
+            lines.add(new Line2D.Float(lastPoint, e.getPoint()));
+            lastPoint = e.getPoint();
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                lastPoint = null;
-            }
+            pane.repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            lastPoint = null;
+        }
     }
 
-    class DrawPane extends JPanel{
-        public void paintComponent(Graphics g){
+    class DrawPane extends JPanel {
+        public void paintComponent(Graphics g) {
             // delete line below :)
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(color);
             for (Line2D.Float line : lines) {
-               g2d.draw(line);
+                g2d.draw(line);
             }
         }
     }

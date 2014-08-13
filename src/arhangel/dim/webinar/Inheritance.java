@@ -9,7 +9,8 @@ public class Inheritance {
         protected String name;
         protected float salary;
 
-        Employee() {}
+        Employee() {
+        }
 
         Employee(String name, float salary) {
             this.name = name;

@@ -30,6 +30,5 @@ public class FruitSortTest extends Assert {
         FruitSort.sortApples(apples, new FruitSort.FruitComparator());
 
 
-
     }
 }

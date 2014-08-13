@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Timer implements Observable {
     private List<Observer> observers = new ArrayList<>();
     private int delay;
-    
+
     public Timer(int delay) {
         this.delay = delay;
     }
