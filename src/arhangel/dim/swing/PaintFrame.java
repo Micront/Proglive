@@ -39,7 +39,7 @@ public class PaintFrame extends JFrame {
 
         DrawListener listener = new DrawListener();
         pane.addMouseListener(listener);
-        pane.addMouseMotionListener(listener);
+
     }
 
 

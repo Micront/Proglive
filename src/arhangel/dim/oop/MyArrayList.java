@@ -18,7 +18,6 @@ public class MyArrayList<T> extends ArrayList<T> {
 
         @Override
         public boolean hasNext() {
-            name = "";
             return cursor >= 0;
         }
 
@@ -37,7 +36,7 @@ public class MyArrayList<T> extends ArrayList<T> {
         strings.add("b");
         strings.add("c");
 
-        Iterator<String> iter = strings.reverseIterator();
+        Iterator<String> iter = strings.iterator();
         while (iter.hasNext()) {
             System.out.println(iter.next());
         }

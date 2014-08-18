@@ -68,7 +68,7 @@ public class Callback {
         }));
 
         // Lambda!
-        System.out.println("Lambda filter [!%3]: " + numbers + " -> " + filter(numbers, (p)-> p % 3 == 0));
+        System.out.println("Lambda filter [!%3]: " + numbers + " -> " + filter(numbers, (p)-> p % 3 != 0));
 
 
         System.out.println("reduce [+]: " + numbers + " -> " + reduce(numbers, 0, new BiOperator<Integer>() {
@@ -79,5 +79,9 @@ public class Callback {
         }));
 
         System.out.println("Lambda reduce [*]: " + numbers + " -> " + reduce(numbers, 1, (t, tt)-> t * tt));
+
+
+        List<String> strings = Arrays.asList("1", "2", "3");
+        System.out.println("Concat: " + strings + " -> " + reduce(strings, "", (t, tt)->t + tt));
     }
 }

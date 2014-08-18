@@ -11,6 +11,7 @@ public class LinkageTest {
 
     public static class Child extends Parent {
 
+        @Override
         public void test() {
             System.out.println("child::test");
         }
