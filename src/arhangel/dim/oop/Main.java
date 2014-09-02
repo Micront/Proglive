@@ -28,19 +28,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main m = new Main();
+        int[] a = {0, 0, 1, 1, Integer.MAX_VALUE};
+        System.out.println(binarySearch(a, 1));
 
-        Inner in = m.new Inner();
+    }
 
-        Nested n = new Nested();
-
-        List l = new ArrayList<>();
-        Collections.sort(l, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.length() - o2.length();
+    static int binarySearch(int[] arr, int num) {
+        if (arr.length == 0) return -1;
+        int a = 0;
+        int b = arr.length - 1;
+        if (arr[a] == num) return a;
+        if (arr[b] == num) return b;
+        for (; ; ) {
+            System.out.println("a = " + a + " b = " + b);
+            if (arr[(b + a) / 2] > num) {
+                b = (b + a) / 2;
+            } else {
+                a = (b + a) / 2;
             }
-        });
-
+            if (arr[a] == num) return a;
+            if (arr[b] == num) return b;
+            if (b - a < 2) return -1;
+        }
     }
 }

@@ -5,8 +5,8 @@ package arhangel.dim.battleship;
  */
 public class Cell {
 
-
-
     int x, y;
     Ship owner;
+
+    boolean isAlreadyHit;
 }

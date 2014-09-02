@@ -28,6 +28,8 @@ public class Battleship {
 
     private boolean[][] map = new boolean[10][10];
 
+    private Cell[][] cellMap = new Cell[10][10];
+
     // Храним здесь все корабли
     private Ship[] ships = new Ship[TOTAL_COUNT];
 
