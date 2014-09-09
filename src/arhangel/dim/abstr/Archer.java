@@ -10,7 +10,7 @@ public class Archer extends Unit {
 
     @Override
     public String getFullInfo() {
-        return "Archer: ...";
+        return "Archer position = (" + x + ", " + y + ")";
     }
 
     public void shoot() {

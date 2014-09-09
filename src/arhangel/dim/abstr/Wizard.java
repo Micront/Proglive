@@ -34,7 +34,7 @@ public class Wizard extends Unit {
 
     @Override
     public String getFullInfo() {
-        return "Wizard: ...";
+        return "Wizard position = (" + x + ", " + y + ")";
     }
 
     @Override

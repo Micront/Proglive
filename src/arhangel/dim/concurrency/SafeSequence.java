@@ -23,15 +23,15 @@ public class SafeSequence {
         t1.start();
         t2.start();
 
-        //t3.start();
+        t3.start();
 
         // waiting for both
         t1.join();
         t2.join();
 
-        //t3.join();
+        t3.join();
 
-        // Should be 200_000
+        // Should be 200_001
         System.out.println("Next Val: " + seq.nextVal());
 
 

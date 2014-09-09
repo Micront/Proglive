@@ -1,6 +1,11 @@
 package arhangel.dim.abstr;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dmirty on 01/09/14.
@@ -19,33 +24,36 @@ public class Main {
 
 
     public static void main(String[] args) {
+        List<String> strings = new ArrayList<>();
+        strings.add("Hello");
 
-        int[] arr = {1, 2, 3};
-        System.out.println("size: " + arr.length);
+        Map<String, String> map = new HashMap<>();
 
+        // id - Long, person - Person
 
-        String[] arr1 = new String[10];
-        System.out.println(Arrays.toString(arr1));
-        for (int i = 0; i < 10; i++) {
-            arr1[i] = String.valueOf(i);
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        List<String> str = Arrays.asList("one", "two", "three");
+
+        Iterator iter = numbers.iterator();
+        while (iter.hasNext()) {
+            Object o = iter.next();
         }
-        System.out.println(Arrays.toString(arr1));
 
-        int[][] map = new int[10][10];
+        for (Integer integer : numbers) {
 
-
-        int[][] map2 = {{0,0},
-                        {1,1,1},
-                        {0}};
-
-
-        int[] row1 = map2[0];
-        int[] row2 = map2[1];
-
+        }
 
 
 
     }
+
+    public static void print(List<?> list) {
+        for (Object o : list) {
+            System.out.println(o);
+        }
+    }
+
+
 
 
 

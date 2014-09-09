@@ -1,8 +1,9 @@
-package arhangel.dim.webinar;
+package arhangel.dim.lesson6;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class CollectionsReview {
         logger.info("Initial list {}", list);
 
         // GET
-        logger.info("element by index 0 = {}", list.get(0));
+        logger.info("element by index 0 = {}", list.get(0)); // arr[0]
 
         // SET
         list.add("John"); // by value
@@ -47,6 +48,15 @@ public class CollectionsReview {
         list.remove("John"); // by value
         list.remove(0); // by index
         logger.info("List after remove {}", list);
+
+        Deque linked = new LinkedList<>();
+
+        //FIFO - очередь First In First Out
+        // LIFO - стек Last In --\\--
+
+        ArrayDeque deque = new ArrayDeque();
+        deque.pop();
+        deque.push(new Object());
     }
 
     static void queueInterface() {
@@ -108,6 +118,8 @@ public class CollectionsReview {
         requests.put("Football", 120);
         requests.put("Hokey", 134);
         requests.put("Ski", 25);
+        requests.put("Ski", 48);
+
         logger.info("Map initial {}", requests);
 
         // CONTAINS
@@ -121,6 +133,22 @@ public class CollectionsReview {
         // REMOVE
         requests.remove(key);
         logger.info("Remove key {} => {}", key, requests);
+
+
+        Set<String> keys = requests.keySet();
+        for (String s : keys) {
+            System.out.println(s);
+        }
+
+        Collection<Integer> vals = requests.values();
+        for (Integer i : vals) {
+            System.out.println(String.valueOf(i));
+        }
+
+        for (Map.Entry<String, Integer> entry : requests.entrySet()) {
+            System.out.println("key=" + entry.getKey() + ", val=" + entry.getValue());
+        }
+
     }
 
     static void operations() {
@@ -148,8 +176,8 @@ public class CollectionsReview {
 
         //listInterface();
         //queueInterface();
-        //setInterface();
-        //mapInterface();
-        operations();
+        // setInterface();
+        mapInterface();
+        //operations();
     }
 }

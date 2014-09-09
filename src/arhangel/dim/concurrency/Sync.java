@@ -1,13 +1,14 @@
 package arhangel.dim.concurrency;
 
 
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Sync {
 
     final Object monitor = new Object();
 
-    ReentrantLock lock = new ReentrantLock();
+    Lock lock = new ReentrantLock();
 
     // lock on this
     // на объекте может быть вызван только 1 sync метод
@@ -32,9 +33,7 @@ public class Sync {
         }
     }
 
-    // lock on class object
     static synchronized void func4() {
-        //
     }
 
 }

@@ -26,7 +26,7 @@ public class Battleship {
 
      */
 
-    private boolean[][] map = new boolean[10][10];
+    //private boolean[][] map = new boolean[10][10];
 
     private Cell[][] cellMap = new Cell[10][10];
 
@@ -38,6 +38,8 @@ public class Battleship {
 
 
         Battleship game = new Battleship();
+
+
         game.createShips();
         game.createMap();
 
@@ -51,6 +53,13 @@ public class Battleship {
 
     */
     private void createShips() {
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                cellMap[i][j] = new Cell();
+            }
+        }
+
         // Battleship
         ships[0] = new Ship(1, 1, true, 4);
 
@@ -86,23 +95,22 @@ public class Battleship {
     private void markShipOnMap(Ship ship) {
         for (int i = 0; i < ship.length; i++) {
             if (ship.isVertical) {
-                map[ship.x][ship.y + i] = true; // клетка занята кораблем
+                cellMap[ship.x][ship.y + i].owner = ship; // клетка занята кораблем
             } else {
-                map[ship.x + i][ship.y] = true;
+                cellMap[ship.x + i][ship.y].owner = ship;
             }
         }
     }
-
 
     // Проверяем, что место куда мы ставим корабль, свободно (клетка карты не отмечена, как занятая)
     private boolean isPlaceFree(Ship ship) {
         for (int i = 0; i < ship.length; i++) {
             if (ship.isVertical) {
-                if (map[ship.x][ship.y + i]) { // если клетка не свободна
+                if (cellMap[ship.x][ship.y + i].owner != null) { // если клетка не свободна
                     return false;
                 }
             } else {
-                if (map[ship.x + i][ship.y]) {
+                if (cellMap[ship.x + i][ship.y].owner != null) {
                     return false;
                 }
             }
@@ -122,8 +130,10 @@ public class Battleship {
 
             System.out.print(i + "|");
             for (int j = 0; j < 10; j++) {
-                if (map[i][j]) {
+                if (cellMap[i][j].owner != null) {
                     System.out.print("X ");
+                } else if (cellMap[i][j].isAlreadyHit) {
+                    System.out.println("* ");
                 } else {
                     System.out.print("~ ");
                 }
@@ -137,6 +147,21 @@ public class Battleship {
         Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         System.out.println("Welcome, " + name);
+    }
+
+    public void restart() {
+        // почистить поле
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                cellMap[i][j] = new Cell();
+            }
+        }
+
+        // создать корабли
+        //
+        createShips();
+
+
     }
 
 

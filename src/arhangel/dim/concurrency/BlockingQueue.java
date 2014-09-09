@@ -1,9 +1,6 @@
-package arhangel.dim.webinar;
+package arhangel.dim.concurrency;
 
 import java.util.LinkedList;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -12,9 +9,6 @@ public class BlockingQueue<T> {
 
     int capacity = 3;
     LinkedList<T> list = new LinkedList<>();
-    Lock lock = new ReentrantLock();
-    Condition isFull = lock.newCondition();
-
 
     public synchronized void enqueue(T item) throws InterruptedException {
         while (list.size() == capacity) {
@@ -34,4 +28,9 @@ public class BlockingQueue<T> {
             notifyAll();
         return item;
     }
+
+    public static void main(String[] args) {
+
+    }
+
 }

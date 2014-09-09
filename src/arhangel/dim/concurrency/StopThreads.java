@@ -13,14 +13,11 @@ public class StopThreads {
                 try {
                     sleep(200);
                 } catch (InterruptedException e) {
-                    // interrupt(); // set flag!
+                    interrupt(); // set flag!
 
                     // close thread's resources
-                    e.printStackTrace();
                     System.out.println("Catch an exception!");
-
                 }
-
             }
         }
     }
@@ -28,10 +25,14 @@ public class StopThreads {
     static class Task2 extends Thread {
         @Override
         public void run() {
-            try {
-                sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (int i = 0; i < 10; i++) {
+                System.out.println("->" + i);
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
             }
         }
     }
@@ -42,13 +43,18 @@ public class StopThreads {
         t.start();
 
         // Другой способ поспать
-        TimeUnit.SECONDS.sleep(1);
+        //TimeUnit.SECONDS.sleep(1);
 
         t.interrupt();
 
         // запускаем другой поток
-        Thread t2 = new Task2();
-        t2.interrupt();
+        /*Thread t2 = new Task2();
+        t2.start();
+
+        TimeUnit.SECONDS.sleep(1);
+*/
+
+        //t2.interrupt();
     }
 
 
