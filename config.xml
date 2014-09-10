@@ -1,0 +1,16 @@
+<root>
+
+    <bean id="engine" class="arhangel.dim.reflection.Engine">
+        <property name="power" val="200"/>
+    </bean>
+
+    <bean id="gear" class="arhangel.dim.reflection.Manual">
+        <property name="count" val="6"/>
+    </bean>
+
+    <bean id="car" class="arhangel.dim.reflection.Car">
+        <property name="engine" ref="engine"/>
+        <property name="gear" ref="gear"/>
+    </bean>
+
+</root>
