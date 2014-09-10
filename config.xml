@@ -9,7 +9,7 @@
     </bean>
 
     <bean id="car" class="arhangel.dim.reflection.Car">
-        <property name="engine" ref="engine"/>
+        <!--<property name="engine" ref="engine"/>-->
         <property name="gear" ref="gear"/>
     </bean>
 

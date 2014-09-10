@@ -40,7 +40,9 @@ public class Context {
 
 
     List<Bean> beans = new ArrayList<>();
-    Map<String, Object> objects = new HashMap<>();
+
+    Map<String, Object> objectsByName = new HashMap<>();
+    Map<String, Object> objectsByClass = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
         Context context = new Context("config.xml");
@@ -62,33 +64,43 @@ public class Context {
     }
 
     public Object getBean(String beanName) {
-        return objects.get(beanName);
+        return objectsByName.get(beanName);
     }
 
     public void instantiateBeans() throws Exception {
         log.info("beans: {}", beans);
         for (Bean bean : beans) {
+            // по имени класса его можно инстанцировать
+            // обязательно должен быть дефолтный конструктор
             String className = bean.getClassName();
             Class clazz = Class.forName(className);
             // ищем дефолтный конструктор
             Object ob = clazz.newInstance();
+
+            processAnnotation(clazz, ob);
+
             for (String name : bean.getProperties().keySet()) {
+                // ищем поле с таким именен внутри класса
+                // учитывая приватные
                 Field field = clazz.getDeclaredField(name);
                 if (field == null) {
                     throw new InvalidConfiguration("Failed to set field [" + name + "] for class " + clazz.getName());
                 }
                 Property prop = bean.getProperties().get(name);
-                // Чтобы устанавливать приватные поля
+                // Чтобы изменять приватные поля
                 field.setAccessible(true);
-                Type type = field.getGenericType();
+
+                // храним тип данных
+                Type type = field.getType();
+
                 switch (prop.getType()) {
                     case VALUE:
                         field.set(ob, convert(type.getTypeName(), prop.getValue()));
                         break;
                     case REF:
                         String refName = prop.getValue();
-                        if (objects.containsKey(refName)) {
-                            field.set(ob, objects.get(refName));
+                        if (objectsByName.containsKey(refName)) {
+                            field.set(ob, objectsByName.get(refName));
                         } else {
                             throw new InvalidConfiguration("Failed to instantiate bean. Field " + name);
                         }
@@ -98,9 +110,11 @@ public class Context {
             }
 
             log.info("Bean instantiated: {}", bean);
-            objects.put(bean.getName(), ob);
+            objectsByName.put(bean.getName(), ob);
+            objectsByClass.put(bean.getClassName(), ob);
 
         }
+
 
     }
 
@@ -112,6 +126,7 @@ public class Context {
         return res;
     }
 
+    // конвертирует строку в объект соответствующего
     private Object convert(String typeName, String data) throws Exception {
         switch (typeName) {
             case "int":
@@ -120,13 +135,16 @@ public class Context {
             case "double":
             case "Double":
                 return Double.valueOf(data);
+            case "boolean":
+            case "Boolean":
+                return Boolean.valueOf(data);
             default:
                 throw new InvalidConfiguration("type name = " + typeName);
         }
     }
 
 
-    void parseBean(Node bean) throws Exception {
+    private void parseBean(Node bean) throws Exception {
         NamedNodeMap attr = bean.getAttributes();
         Node name = attr.getNamedItem(ATTR_BEAN_ID);
         String nameVal = name.getNodeValue();
@@ -148,13 +166,13 @@ public class Context {
         beans.add(new Bean(nameVal, classVal, properties));
     }
 
-    Property parseProperty(Node node) throws Exception {
+    private Property parseProperty(Node node) throws Exception {
         NamedNodeMap map = node.getAttributes();
         String name = map.getNamedItem(ATTR_NAME).getNodeValue();
         Node val = map.getNamedItem(ATTR_VALUE);
         if (val != null) {
             // если значение примитивного типа
-           return new Property(name, val.getNodeValue(), ValueType.VALUE);
+            return new Property(name, val.getNodeValue(), ValueType.VALUE);
         } else {
             // если значение ссылочного типа
             val = map.getNamedItem(ATTR_REF);
@@ -163,12 +181,30 @@ public class Context {
             } else {
                 throw new InvalidConfiguration("Failed to parse property " + name);
             }
-
         }
-
     }
 
-    Document readXml(String path) throws Exception {
+    private void processAnnotation(Class clazz, Object instance) throws Exception {
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Auto.class)) {
+                Auto auto = field.getAnnotation(Auto.class);
+                log.info("ANNOTATION {}.{} TYPE {} auto isRequired: {}", clazz.getName(), field.getName(), field.getType().getName(), auto.isRequired());
+
+                if (auto.isRequired() && !objectsByClass.containsKey(field.getType().getName())) {
+                    throw new InvalidConfiguration("Failed to wire @Auto " + field.getType() + " : " + field.getName());
+                } else if (objectsByClass.containsKey(field.getType().getName())) {
+                    Object obj = objectsByClass.get(field.getType().getName());
+                    field.setAccessible(true);
+                    field.set(instance, obj);
+
+                }
+            }
+        }
+    }
+
+
+    private Document readXml(String path) throws Exception {
         File file = new File(path);
         log.info("path=" + file.getAbsolutePath());
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
